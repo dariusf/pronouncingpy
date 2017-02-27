@@ -1,6 +1,6 @@
 from __future__ import print_function
 import re
-from pkg_resources import resource_stream
+import os
 import collections
 
 __author__ = 'Allison Parrish'
@@ -23,7 +23,7 @@ def parse_cmu(cmufh):
     """
     pronunciations = list()
     for line in cmufh:
-        line = line.strip().decode('latin1')
+        line = line.strip()
         if line.startswith(';'):
             continue
         word, phones = line.split("  ")
@@ -46,7 +46,7 @@ def init_cmu(filehandle=None):
     global pronunciations, lookup, rhyme_lookup
     if pronunciations is None:
         if filehandle is None:
-            filehandle = resource_stream(__name__, 'cmudict-0.7b')
+            filehandle = open(os.path.join(os.path.dirname(__file__), 'cmudict-0.7b'), 'r', encoding='latin1')
         pronunciations = parse_cmu(filehandle)
         filehandle.close()
         lookup = collections.defaultdict(list)
